@@ -6,6 +6,18 @@ const UserSchema = new Schema({
     email: {type: String, required: true},
     company: {type: String, required: true},
     password: {type: String, required: true, minLength: 8},
+    refreshJWT: {
+        token: {
+          type: String,
+          maxlength: 500,
+          default: "",
+        },
+        addedAt: {
+          type: Date,
+          required: true,
+          default: Date.now(),
+        },
+      },
     
 })
 

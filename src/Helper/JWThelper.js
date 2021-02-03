@@ -1,19 +1,54 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const { setJWT, getJWT } = require("./RedisHelper");
+const { storeUserRefreshJWT } = require("../Model/User/UserModel")
 
-const createJWT = (payload) => {
-    const token = jwt.sign({payload}, process.env.JWT_TOKEN, {expiresIn : "15m"});
+const createJWT = async (email, _id) => {
+  try {
+    const token = jwt.sign({ email }, process.env.JWT_TOKEN, {
+      expiresIn: "15m",
+    });
 
-    return Promise.resolve(token)
-}
+    await setJWT(token, _id);
+    return Promise.resolve(token);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
 
-const refreshJWT = (payload) => {
-    const token = jwt.sign({payload}, process.env.JWT_TOKEN_REFRESH, {expiresIn: "30d"});
+const refreshJWT = async (email, _id) => {
+  try {
+    const token = jwt.sign({ email }, process.env.JWT_TOKEN_REFRESH, {
+      expiresIn: "30d",
+    });
 
-    return Promise.resolve(token)
-}
+    await storeUserRefreshJWT(_id, token);
+
+    return Promise.resolve(token);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+const verifyAccessJWT = (userJWT) => {
+    try {
+      return Promise.resolve(jwt.verify(userJWT, process.env.JWT_TOKEN));
+    } catch (error) {
+      return Promise.resolve(error);
+    }
+  };
+
+  const verifyRefreshJWT = (userJWT) => {
+    try {
+      return Promise.resolve(jwt.verify(userJWT, process.env.JWT_REFRESH_SECRET));
+    } catch (error) {
+      return Promise.resolve(error);
+    }
+  };
 
 module.exports = {
-    createJWT,
-    refreshJWT,
-}
+  createJWT,
+  refreshJWT,
+  verifyAccessJWT,
+  verifyRefreshJWT 
+};

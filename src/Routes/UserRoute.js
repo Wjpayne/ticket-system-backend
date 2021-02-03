@@ -55,9 +55,9 @@ router.post("/login", async (req, res) => {
 
   //create JWT for authentification
 
-  const createToken = await createJWT(user.email);
+  const createToken = await createJWT(user.email, `${user._id}`);
 
-  const refreshToken = await refreshJWT(user.email);
+  const refreshToken = await refreshJWT(user.email, `${user._id}`);
 
   res.json({
     status: "succuess",
