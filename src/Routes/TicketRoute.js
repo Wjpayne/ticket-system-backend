@@ -1,5 +1,5 @@
-const { auth } = require('../Middleware/auth');
-const { insertTicket, getTickets } = require("../Model/Ticket/TicketModel")
+const { auth } = require("../Middleware/auth");
+const { insertTicket, getTickets, getTicketById } = require("../Model/Ticket/TicketModel");
 const express = require("express");
 const router = express.Router();
 
@@ -13,9 +13,7 @@ router.post("/addticket", auth, async (req, res) => {
   try {
     const { subject, sender, message } = req.body;
 
-    
-
-    const userId = req.userId
+    const userId = req.userId;
 
     const ticket = {
       clientId: userId,
@@ -47,8 +45,7 @@ router.post("/addticket", auth, async (req, res) => {
 
 //get ticket details for user
 
-router.get("/userticket", auth, async  (req, res) => {
-
+router.get("/userticket", auth, async (req, res) => {
   try {
     const userId = req.userId;
     const result = await getTickets(userId);
@@ -60,8 +57,9 @@ router.get("/userticket", auth, async  (req, res) => {
   } catch (error) {
     res.json({ status: "error", message: error.message });
   }
+});
 
-})
+//get tickets for a user
 
 router.get("/:_id", auth, async (req, res) => {
   try {
@@ -78,8 +76,6 @@ router.get("/:_id", auth, async (req, res) => {
     res.json({ status: "error", message: error.message });
   }
 });
-
-
 
 
 
