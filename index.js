@@ -39,11 +39,13 @@ app.use(express.json());
 
 const userRouter = require("./src/Routes/UserRoute");
 const ticketRouter = require("./src/Routes/TicketRoute");
+const tokenRouter = require("./src/Routes/TokenRoute")
 
 //routes
 
 app.use("/user", userRouter);
-// app.use("/ticket", ticketRouter);
+app.use("/ticket", ticketRouter);
+app.use("/token", tokenRouter);
 
 const port = process.env.PORT || 5000;
 

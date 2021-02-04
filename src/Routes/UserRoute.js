@@ -71,6 +71,7 @@ router.post("/login", async (req, res) => {
 });
 
 
+
 //Get user profile
 
 router.get("/get", auth, async (req, res) => {
@@ -105,7 +106,7 @@ router.delete("/logout", auth, async (req, res) => {
 
   res.json({
     status: "error",
-    message: "Unable to logg you out, plz try again later",
+    message: "Unable to log you out, please try again later",
   });
 });
 

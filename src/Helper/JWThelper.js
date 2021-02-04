@@ -6,7 +6,7 @@ const { storeUserRefreshJWT } = require("../Model/User/UserModel")
 const createJWT = async (email, _id) => {
   try {
     const token = jwt.sign({ email }, process.env.JWT_TOKEN, {
-      expiresIn: "15m",
+      expiresIn: "14m",
     });
 
     await setJWT(token, _id);
@@ -40,7 +40,7 @@ const verifyAccessJWT = (userJWT) => {
 
   const verifyRefreshJWT = (userJWT) => {
     try {
-      return Promise.resolve(jwt.verify(userJWT, process.env.JWT_REFRESH_SECRET));
+      return Promise.resolve(jwt.verify(userJWT, process.env.JWT_TOKEN_REFRESH));
     } catch (error) {
       return Promise.resolve(error);
     }
