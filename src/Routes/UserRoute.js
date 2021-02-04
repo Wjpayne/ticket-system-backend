@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { insertUser, getUserByEmail } = require("../Model/User/UserModel");
+const { insertUser, getUserByEmail, getUserById } = require("../Model/User/UserModel");
 const { hashPassword, comparePassword } = require("../Helper/BcryptHelper");
 const { createJWT, refreshJWT } = require("../Helper/JWThelper");
+const { auth } = require("../Middleware/auth")
+const { deleteJWT } = require("../Helper/RedisHelper");
+
 
 router.all("/", (req, res, next) => {
   next();
@@ -66,5 +69,46 @@ router.post("/login", async (req, res) => {
     refreshToken,
   });
 });
+
+
+//Get user profile
+
+router.get("/get", auth, async (req, res) => {
+  //this data coming form database
+  const _id = req.userId;
+
+  const userProf = await getUserById(_id);
+  const { name, email } = userProf;
+  res.json({
+    user: {
+      _id,
+      name,
+      email,
+    },
+  });
+});
+
+router.delete("/logout", auth, async (req, res) => {
+  const { authorization } = req.headers;
+  //this data coming form database
+  const _id = req.userId;
+
+  // 2. delete accessJWT from redis database
+  deleteJWT(authorization);
+
+  // 3. delete refreshJWT from mongodb
+  const result = await storeUserRefreshJWT(_id, "");
+
+  if (result._id) {
+    return res.json({ status: "success", message: "Loged out successfully" });
+  }
+
+  res.json({
+    status: "error",
+    message: "Unable to logg you out, plz try again later",
+  });
+});
+
+
 
 module.exports = router;

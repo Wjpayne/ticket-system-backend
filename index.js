@@ -43,7 +43,7 @@ const ticketRouter = require("./src/Routes/TicketRoute");
 //routes
 
 app.use("/user", userRouter);
-app.use("/ticket", ticketRouter);
+// app.use("/ticket", ticketRouter);
 
 const port = process.env.PORT || 5000;
 
