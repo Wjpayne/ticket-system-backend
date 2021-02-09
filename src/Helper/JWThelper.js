@@ -6,7 +6,7 @@ const { storeUserRefreshJWT } = require("../Model/User/UserModel")
 const createJWT = async (email, _id) => {
   try {
     const token = jwt.sign({ email }, process.env.JWT_TOKEN, {
-      expiresIn: "15m",
+      expiresIn: "1d",
     });
 
     await setJWT(token, _id);

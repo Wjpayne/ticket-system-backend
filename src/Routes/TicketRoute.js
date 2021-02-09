@@ -56,7 +56,7 @@ router.post("/addticket",  createNewTicketValidation, auth, async (req, res) => 
 
 //get ticket details for user
 
-router.get("/userticket", auth, async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const userId = req.userId;
     const result = await getTickets(userId);
